@@ -1,0 +1,24 @@
+# cp this file to /usr/lib/systemd/system/scoop-puma.service
+# and run following command after that
+# sudo systemctl daemon-reload
+
+[Unit]
+Description=Scoop - Puma HTTP Server
+After=network.target
+
+[Service]
+SyslogIdentifier=scoop-puma
+
+# Foreground process (do not use --daemon in ExecStart or config.rb)
+Type=simple
+WorkingDirectory=/home/ubuntu/apps/scoop/current
+
+ExecStart=/usr/share/rvm/gems/ruby-3.0.1/wrappers/bundle exec puma -e production -C /home/ubuntu/apps/scoop/current/config/puma.rb
+ExecStop=/usr/share/rvm/gems/ruby-3.0.1/wrappers/bundle exec pumactl -F /home/ubuntu/apps/scoop/current/config/puma.rb stop
+TimeoutSec=15
+KillMode=process
+Restart=always
+EnvironmentFile=/home/ubuntu/apps/scoop/current/.prod-env
+
+[Install]
+WantedBy=multi-user.target

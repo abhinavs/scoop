@@ -12,8 +12,11 @@ threads threads_count, threads_count
 sinatra_env = ENV.fetch("SINATRA_ENV") { "development" }
 environment sinatra_env
 
+app_dir = File.expand_path("..", __FILE__)
+if %w[production staging].member?(sinatra_env)
+  app_dir = File.expand_path("../..", __FILE__)
+end
 
-app_dir = '/home/ubuntu/apps/scoop/current'
 directory app_dir
 rackup "#{app_dir}/config.ru"
 

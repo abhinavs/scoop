@@ -1,0 +1,3 @@
+DATABASE_URL=postgresql://USERNAME:PASSWORD@DBHOST/DB_NAME
+RACK_ENV=production
+SINATRA_ENV=production

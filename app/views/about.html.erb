@@ -1,0 +1,111 @@
+<div class="container">
+
+    <div class="scoop">
+      <img src="images/scoop.png" class="img-responsive main-image">
+      <h1>scoop</h1>
+    </div>
+
+  <div class="content">
+    <h1 id="sinatra-boilerplate-using-corneal-activerecord-capistrano-puma-nginx">Sinatra boilerplate using Corneal, ActiveRecord, Capistrano, Puma &amp; Nginx</h1>
+    <h2 id="installation-set-up">Installation &amp; set up</h2>
+    <p>It is very easy to start using scoop as a base for your project, you need to do the following</p>
+    <ul>
+      <li><code>git clone git@github.com:abhinavs/scoop.git</code></li>
+      <li><code>rvm install 3.0.1</code></li>
+      <li><code>gem install corneal</code></li>
+      <li><code>gem install foreman</code></li>
+      <li><code>gem install bundler</code></li>
+      <li><code>cd scoop; bundle install</code></li>
+    </ul>
+    <p>You should also see <code>config/database.yml</code> file, and change the name of the database. After that create the database 
+      <code>bundle exec rake db:create</code> 
+    </p>
+    <h2 id="development">Development</h2>
+    <p>Scoop used Corneal - it is a Sinatra app generator with useful utilities</p>
+    <ul>
+      <li>Generate a model: <code>corneal model NAME</code></li>
+      <li>Generate a controller: <code>corneal controller NAME</code></li>
+      <li>Generate a controller with no views: <code>corneal controller NAME --no-views</code></li>
+      <li>Generate a model with its associated views and controllers: <code>corneal scaffold NAME</code></li>
+    </ul>
+    <p>Scoop has JSON integration, and it is perfect for APIs. You can check out <a href="https://github.com/abhinavs/pincodr/blob/master/app/controllers/pincodr_controller.rb">pincodr&#39;s controller</a> to see how to create APIs.</p>
+    <p>You can migrate data using the following command
+      <code>bundle exec rake db:migrate</code>
+    </p>
+    <h2 id="starting-development-server">Starting development server</h2>
+    <p>You can start the development server using foreman
+      <code>foreman start</code>
+    </p>
+    <p>If you open the <code>http://localhost:9393</code> you should see a page getting rendered. You can also see <code>http://localhost:9393/status</code> for JSON response. Both of these routes are inside <code>app/controllers/example_controller.rb</code></p>
+    <h2 id="deploying-to-production">Deploying to production</h2>
+    <p>Our production set up uses</p>
+    <ul>
+      <li>rvm as ruby version manager</li>
+      <li>Puma as app server</li>
+      <li>Nginx in front of that</li>
+      <li>We deploy using Capistrano</li>
+      <li>We add puma as a <code>sysctl</code> service for easy management</li>
+    </ul>
+    <p>Assuming you have created database, and have installed <code>rvm</code>, install ruby on the <strong>server(s)</strong> by<code>rvm install 3.0.1</code></p>
+    <ul>
+      <li><code>rvm use --default 3.0.1</code> # You can also set it as default</li>
+      <li><code>gem install bundler</code> # Install bundler</li>
+      <li><code>sudo apt-get install nginx</code></li>
+    </ul>
+    <p>To start with first see <code>config/deploy.rb</code> and <code>config/deploy/production.rb</code> files, and change the following details</p>
+    <ul>
+      <li>Server IPs (<code>instances</code> in <code>config/deploy/production.rb</code>)</li>
+      <li>Name of the application (<code>application</code>)</li>
+      <li>Git repo URL (<code>repo_url</code>)</li>
+      <li>Full path of the directory in which you want code to be deployed (<code>deploy_to</code>)</li>
+      <li>Name of the deploying user (<code>deploy_user</code>) - this user will ssh into the system</li>
+      <li>SSH key (<code>deploy_ssh_keys</code>)</li>
+    </ul>
+    <h4 id="installing-puma-as-a-service">Installing puma as a service</h4>
+    <p>Modify <code>config/scoop-puma.example.service</code> </p>
+    <ul>
+      <li>Update <code>WorkingDirectory</code>, <code>ExecStart</code>, <code>ExecStop</code> with the right working directory</li>
+      <li>Update <code>SyslogIdentifier</code> with the name you want to give. I generally prefer to keep it as the name of the app and puma (scoop-puma) so that you can deploy multiple services.</li>
+    </ul>
+    <p>Modify <code>config/deploy.rb</code> and replace <code>scoop-puma</code> with the name you have chosen.</p>
+    <p>Login to the <strong>server(s)</strong> and do the following</p>
+    <ul>
+      <li>Create the <code>deploy_to</code> directory</li>
+      <li>Create an .prod-env in <code>deploy_to</code> directory (look at <code>config/prod-env</code>) file as an example. You need DATABASE_URL, SINATRA_ENV &amp; RACK_ENV variables. Add any other credentials you have to use.</li>
+    </ul>
+    <p>From your local machine, deploy code by <code>cap production deploy</code>  - this step may not succeed, but ensure your code reaches the server.</p>
+    <p>On the <strong>server(s)</strong>, now we need to install puma as a service (I am copying it as scoop-puma.service, you should use the service name you have given in SyslogIdentifier)</p>
+    <ul>
+      <li><code>cp config/scoop-puma.example.service /usr/lib/systemd/system/scoop-puma.service</code> </li>
+      <li><code>sudo systemctl daemon-reload</code></li>
+      <li><code>sudo systemctl enable scoop-puma.service</code></li>
+    </ul>
+    <p>From your local machine, deploy code once again using <code>cap production deploy</code> - ideally this time, deployment should succeed and puma server should come up.</p>
+    <p>Check if puma server is up or not by <code>sudo service scoop-puma status</code></p>
+    <h2 id="config-nginx">Config Nginx</h2>
+    <p>Modify `scoop.nginx.conf&#39; and change the following things</p>
+    <ul>
+      <li>Name of the server <code>server_name</code></li>
+      <li>Path wherever you see - this path is the server path, and will have <code>current</code> in it.</li>
+    </ul>
+    <p>On the <code>server(s)</code> copy this config file to /etc/nginx/sites-enabled/scoop.conf and restart the nginx (<code>sudo service nginx restart</code>) </p>
+    <p>You might have to symlink scoop.conf file in sites-available directory too - you can do that by <code>sudo ln -s /etc/nginx/sites-enabled/scoop.conf /etc/nginx/sites-available/scoop.conf</code></p>
+    <h2 id="final-deploy">Final Deploy</h2>
+    <p>Deploy it once again <code>cap production deploy</code> </p>
+    <h2 id="console">Console</h2>
+    <p>From the application directory, do <code>bundle exec rake console</code> to open rails like console </p>
+    <p>If you want to run create and run custom rake tasks, look at <code>Rakefile</code> and <code>bin/example_script.rb</code> for example</p>
+  </div>
+
+  <div class="sidebar">
+    <h2>Environment</h2>
+    <ul>
+      <li><b>Ruby:</b> <%= RUBY_VERSION %></li>
+      <li><b>Environment:</b> <%= ENV["RACK_ENV"] %></li>
+      <li><b>Server:</b> <%= @env["SERVER_SOFTWARE"] %></li>
+      <li><b>Port:</b> <%= @env["SERVER_PORT"] %></li>
+    </ul>
+  </div>
+
+
+</div>

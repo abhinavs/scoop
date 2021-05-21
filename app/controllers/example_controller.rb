@@ -4,7 +4,7 @@ class ExampleController < ApplicationController
   before { content_type :json }
 
   not_found do
-    jsonp({:error => "not found"})
+    jsonp({error: "not found"})
   end
 
   helpers do
@@ -20,7 +20,11 @@ class ExampleController < ApplicationController
 
   get '/' do
     content_type :html
-    erb :about
+    erb :"/about.html"
+  end
+
+  get '/status' do
+    jsonp({status: "ok"})
   end
 
 end

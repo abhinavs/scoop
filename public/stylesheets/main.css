@@ -1,20 +1,10 @@
 .scoop img {
-  height: 7rem;
-  width: auto;
-  margin-right: 0.5rem;
-}
-.scoop h1 {
-  font-size: 5.5rem;
-  text-transform: lowercase;
-  letter-spacing: -5px; 
-  margin-bottom: 0.1rem;
-  line-height: 0%;
+  height: auto;
+  width: 60%;
+  margin-left: 20%;
 }
 .scoop {
-  display: flex;
-  flex-direction: row;
-  vertical-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 5rem;
 }
 
 @media screen {

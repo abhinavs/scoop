@@ -1,4 +1,5 @@
-# scoop
+<img src="https://raw.githubusercontent.com/abhinavs/scoop/master/public/images/scoop-header.png" />
+
 
 ## Sinatra boilerplate using Corneal, ActiveRecord, Capistrano, Puma & Nginx
 

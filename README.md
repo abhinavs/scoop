@@ -1,7 +1,18 @@
 <img src="https://raw.githubusercontent.com/abhinavs/scoop/master/public/images/scoop-header.png" />
 
 
-## Sinatra boilerplate using Corneal, ActiveRecord, Capistrano, Puma & Nginx
+## Sinatra boilerplate project using Corneal, ActiveRecord, Capistrano, Puma & Nginx
+
+If you are develop microservices or web APIs, [Sinatra](http://sinatrarb.com/) is a great choice. It is fast and minimal and helps you get to the business soon. However, bootstraping a Sinatra project that is optimized for development speed as well as is easy to deploy has become non trivial because 
+1. documentation is not easy to find (you mostly find rails specific tips)
+2. you need to write code to set up and connect DB, manage migrations etc.
+3. you need to create a right directory structure yourself, and configure it accordingly
+4. you also miss a boot file, that you can use with console and with custom rake tasks/scripts
+5. setting up projects for deployment is tedious and error prone - with a lot of details to be filled in for Capistrano, Puma and Nginx.
+
+[Scoop](https://github.com/abhinavs/scoop) solves it by providing a good boilerplate that can be a starting point for your next project. It solves all the above mentioned problems, and comes up with easy to edit configuration files that can help you correctly configure puma, capistrano and nginx quickly.
+
+Try Sinatra by forking [Scoop Repository](https://github.com/abhinavs/scoop/fork)
 
 ### Installation & set up
 It is very easy to start using scoop as a base for your project, you need to do the following
@@ -103,7 +114,17 @@ contact: [abhinav][1] | [homepage][2]
  [1]: https://twitter.com/abhinav "abhinav"
  [2]: https://www.abhinav.co "homepage"
 
-## Copyright
+## Other Projects
+If you like Scoop, do check out my other projects
+*   [cookie](https://github.com/abhinavs/cookie) - a free landing website boilerplate using Jekyll and Tailwind CSS
+*   [moonwalk](https://github.com/abhinavs/moonwalk) - a fast and minimal blog theme with clean dark mode
+*   [soopr](https://www.soopr.co) - a tool that supports you in content marketing
+*   [apicagent](https://www.apicagent.com) - a FREE API that extracts device details from user-agent string
+*   [pincodr](https://pincodr.apiclabs.com) - a FREE API for Indian pincodes
+*   [humangous](https://www.humangous.co) - create public and private 'working with you' guides
+*   [blockr](https://www.abhinav.co/blockr) - a CLI tool to help you easily block and unblock websites
+*   [microrequests](https://www.abhinav.co/microrequests) - a Python library to help you consume microservice efficiently
 
-Copyright (c) 2021 Abhinav Saxena. See LICENSE for details.
+
+✨⚡You can read more about me on my [blog](https://www.abhinav.co/about/) or follow me on Twitter- [@abhinav](https://twitter.com/abhinav)
 

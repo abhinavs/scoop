@@ -3,20 +3,20 @@
 
 ## Sinatra boilerplate project using Corneal, ActiveRecord, Capistrano, Puma & Nginx
 
-If you are develop microservices or web APIs, [Sinatra](http://sinatrarb.com/) is a great choice. It is fast and minimal and helps you get to the business soon. However, bootstraping a Sinatra project that is optimized for development speed as well as is easy to deploy has become non trivial because 
-1. documentation is not easy to find (you mostly find rails specific tips)
-2. you need to write code to set up and connect DB, manage migrations etc.
-3. you need to create a right directory structure yourself, and configure it accordingly
-4. you also miss a boot file, that you can use with console and with custom rake tasks/scripts
-5. setting up projects for deployment is tedious and error prone - with a lot of details to be filled in for Capistrano, Puma and Nginx.
+If you are developing microservices or web APIs, [Sinatra](http://sinatrarb.com/) is a great choice. It is fast and minimal and helps you get to the business soon. However, bootstraping a Sinatra project that is optimized for development speed as well as is easy to deploy has become non trivial because 
+1. Documentation is not easy to find (you mostly find rails specific tips)
+2. You need to write code to set up and connect DB, manage migrations etc.
+3. You need to create a right directory structure yourself, and configure it accordingly
+4. You also miss a boot file, that you can use with console and with custom rake tasks/scripts
+5. Setting up projects for deployment is tedious and error prone, with a lot of details to be filled in for Capistrano, Puma and Nginx.
 
 [Scoop](https://github.com/abhinavs/scoop) solves it by providing a good boilerplate that can be a starting point for your next project. It solves all the above mentioned problems, and comes up with easy to edit configuration files that can help you correctly configure puma, capistrano and nginx quickly.
 
 Try Sinatra by forking [Scoop Repository](https://github.com/abhinavs/scoop/fork)
 
 ### Installation & set up
-It is very easy to start using scoop as a base for your project, you need to do the following
-  - `git clone git@github.com:abhinavs/scoop.git`
+It is very easy to start using scoop as a base for your project, you need to do the following on your development machine
+  - `git clone git@github.com:abhinavs/scoop.git APP_NAME` (replace `APP_NAME` with the name of your application, and replace `abhinavs` with your username if you have forked the repo)
   - `rvm install 3.0.1`
   - `gem install corneal`
   - `gem install foreman`
@@ -44,14 +44,20 @@ You can start the development server using foreman
 
 If you open the `http://localhost:9393` you should see a page getting rendered. You can also see `http://localhost:9393/status` for JSON response. Both of these routes are inside `app/controllers/example_controller.rb`
 
+### Console & Rake tasks
+From the application directory, do `bundle exec rake console` to open rails like console.
+
+If you want to run create and run custom rake tasks, look at `Rakefile` and `bin/example_script.rb` for example
+
 ### Deploying to production
+>Please note - if you need help in installing RVM and other essential packages, you can check out [this guide on Soopr](https://www.soopr.co/blog/deploy-ruby-on-rails-app-on-aws-graviton-part-1). If you need help in installing database, you can see "Creating A Database" section on [Go Rails' guide](https://gorails.com/deploy/ubuntu/20.04#database)
+
 Our production set up uses
   - rvm as ruby version manager
   - Puma as app server
   - Nginx in front of that
   - We deploy using Capistrano
   - We add puma as a `sysctl` service for easy management
-
 
 Assuming you have created the database, and have installed `rvm`, install ruby on the **server(s)** by`rvm install 3.0.1`
 
@@ -67,7 +73,7 @@ To start with first see `config/deploy.rb` and `config/deploy/production.rb` fil
   - Name of the deploying user (`deploy_user`) - this user will ssh into the system
   - SSH key (`deploy_ssh_keys`)
 
-#### Installing puma as a service
+### Installing puma as a service
 Modify `config/scoop-puma.example.service` 
   - Update `WorkingDirectory`, `ExecStart`, `ExecStop` with right working directory
   - Update `SyslogIdentifier` with the name you want to give. I generally prefer to keep it as the name of the app and puma (scoop-puma) so that you can deploy multiple services.
@@ -102,11 +108,6 @@ On the `server(s)` copy this config file to /etc/nginx/sites-enabled/scoop.conf 
 
 ### Final Deploy
 Deploy it once again `cap production deploy` 
-
-### Console & Rake tasks
-From the application directory, do `bundle exec rake console` to open rails like console.
-
-If you want to run create and run custom rake tasks, look at `Rakefile` and `bin/example_script.rb` for example
 
 
 contact: [abhinav][1] | [homepage][2]

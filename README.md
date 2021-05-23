@@ -1,18 +1,32 @@
 <img src="https://raw.githubusercontent.com/abhinavs/scoop/master/public/images/scoop-header.png" />
 
+# Scoop
+## a production-ready Sinatra boilerplate project using Corneal, ActiveRecord, Capistrano, Puma & Nginx
 
-## Sinatra boilerplate project using Corneal, ActiveRecord, Capistrano, Puma & Nginx
+[Sinatra](http://sinatrarb.com/) is a Ruby framework that helps you quickly create web applications, APIs and microservices. Its minimalism not only attracted a lot of developers, but it also inspired [Flask](https://flask.palletsprojects.com/en/2.0.x/) in Python and [Express](https://expressjs.com/) in Node.js
 
-If you are developing microservices or web APIs, [Sinatra](http://sinatrarb.com/) is a great choice. It is fast and minimal and helps you get to the business soon. However, bootstraping a Sinatra project that is optimized for development speed as well as is easy to deploy has become non trivial because 
-1. Documentation is not easy to find (you mostly find rails specific tips)
+If you are developing microservices or web APIs, Sinatra is a great choice. However, bootstraping a Sinatra project that is optimized for development speed as well as is easy to deploy has become non trivial because 
+1. Documentation is not easy to find (you mostly find Ruby on Rails specific tips)
 2. You need to write code to set up and connect DB, manage migrations etc.
-3. You need to create a right directory structure yourself, and configure it accordingly
-4. You also miss a boot file, that you can use with console and with custom rake tasks/scripts
+3. You need to create a right directory structure yourself and configure it accordingly
+4. You also miss a boot file that you can use with console and with custom rake tasks/scripts
 5. Setting up projects for deployment is tedious and error prone, with a lot of details to be filled in for Capistrano, Puma and Nginx.
 
-[Scoop](https://github.com/abhinavs/scoop) solves it by providing a good boilerplate that can be a starting point for your next project. It solves all the above mentioned problems, and comes up with easy to edit configuration files that can help you correctly configure puma, capistrano and nginx quickly.
+[Scoop](https://github.com/abhinavs/scoop) solves it by providing a good boilerplate that can be a starting point for your next project. It solves all the above mentioned problems and comes up with easy to edit configuration files that can help you correctly configure servers.
 
-Try Sinatra by forking [Scoop Repository](https://github.com/abhinavs/scoop/fork)
+Scoop uses
+1. [Corneal](http://thebrianemory.github.io/corneal/) to make scaffolding models, controllers and views
+2. ActiveRecord as database ORM
+3. Capistrano for deployment
+4. Puma as app server
+5. Nginx as a proxy server
+
+In addition, 
+1. it is also JSON API ready with JSON, CORS and JSONP support already enabled,
+2. has a RoR like console, and
+3. comes up with example script and rake task that can be used to perform tasks that load the environment
+
+Try Sinatra & Scoop by forking [Scoop Repository](https://github.com/abhinavs/scoop/fork)
 
 ### Installation & set up
 It is very easy to start using scoop as a base for your project, you need to do the following on your development machine
@@ -50,14 +64,11 @@ From the application directory, do `bundle exec rake console` to open rails like
 If you want to run create and run custom rake tasks, look at `Rakefile` and `bin/example_script.rb` for example
 
 ### Deploying to production
->Please note - if you need help in installing RVM and other essential packages, you can check out [this guide on Soopr](https://www.soopr.co/blog/deploy-ruby-on-rails-app-on-aws-graviton-part-1). If you need help in installing database, you can see "Creating A Database" section on [Go Rails' guide](https://gorails.com/deploy/ubuntu/20.04#database)
-
 Our production set up uses
   - rvm as ruby version manager
-  - Puma as app server
-  - Nginx in front of that
-  - We deploy using Capistrano
   - We add puma as a `sysctl` service for easy management
+
+>Please note - if you need help in installing RVM and other essential packages, you can check out [this guide on Soopr](https://www.soopr.co/blog/deploy-ruby-on-rails-app-on-aws-graviton-part-1). If you need help in installing database, you can see "Creating A Database" section on [Go Rails' guide](https://gorails.com/deploy/ubuntu/20.04#database)
 
 Assuming you have created the database, and have installed `rvm`, install ruby on the **server(s)** by`rvm install 3.0.1`
 
@@ -82,8 +93,8 @@ Modify `config/deploy.rb` and replace `scoop-puma` with the name you have chosen
 
 
 Login to the **server(s)** and do the following
-  - Create the `deploy_to` directory
-  - Create an .prod-env in `deploy_to` directory (look at `config/prod-env`) file as an example. You need DATABASE_URL, SINATRA_ENV & RACK_ENV variables. Add any other credentials you have to use.
+  - Create the directory you have mentioned in your `deploy_to` variable
+  - Create an .prod-env in that directory (look at `config/prod-env`) file as an example. You need DATABASE_URL, SINATRA_ENV & RACK_ENV variables. Add any other credentials you have to use.
 
 From your local machine, deploy code by `cap production deploy`  - this step may not succeed, but ensure your code reaches the server.
 

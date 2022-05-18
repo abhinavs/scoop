@@ -9,6 +9,9 @@ class ApplicationController < Sinatra::Base
 
   configure :development do
     register Sinatra::Reloader
+
+    also_reload "app/models/**/*.rb"
+    also_reload "lib/**/*.rb"
   end
 
   configure do
